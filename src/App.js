@@ -57,7 +57,7 @@ function App() {
       headerStyle: (colum, colIndex) => {
         return { width: '70px', textAlign: 'center' };
       },
-      formatter: (editorProps, value, row, column, rowIndex, columnIndex) => (<ion-icon style={{fontSize: 70}} name={value.image}></ion-icon>),
+      formatter: (editorProps, value, row, column, rowIndex, columnIndex) => (<ion-icon style={{fontSize: 50}} name={value.image}></ion-icon>),
       editorRenderer: (editorProps, value, row, column, rowIndex, columnIndex) => (
         <QualityRanger {...editorProps} value={value} />
       )
