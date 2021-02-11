@@ -15,13 +15,13 @@ function App() {
     name: 'Pizzas',
     price: 2.5,
     active: true,
-    image: 'pizza-outline'
+    images: 'pizza-outline'
   }, {
     id: 1,
     name: 'Bebidas',
     price: 225,
     active: false,
-    image: 'beer-outline'
+    images: 'beer-outline'
   }]);
 
   const [selected, setSelected] = useState([])
@@ -45,6 +45,7 @@ function App() {
     {
       dataField: 'active',
       text: 'Status',
+  
       headerStyle: (colum, colIndex) => {
         return { width: '60px', textAlign: 'center' };
       },
@@ -52,21 +53,20 @@ function App() {
       formatter: (editorProps, value, row, column, rowIndex, columnIndex) => (<Toggle state={value.active} submitToggle={() => submitToggle(value.id)} />),
     },
     {
-      dataField: 'image',
+      dataField: 'images',
       text: 'Imagem',
       headerStyle: (colum, colIndex) => {
         return { width: '70px', textAlign: 'center' };
       },
-      formatter: (editorProps, value, row, column, rowIndex, columnIndex) => (<ion-icon style={{fontSize: 50}} name={value.image}></ion-icon>),
+      formatter: (editorProps, value, row, column, rowIndex, columnIndex) => (<ion-icon style={{fontSize: 50}} name={value.images}></ion-icon>),
       editorRenderer: (editorProps, value, row, column, rowIndex, columnIndex) => (
         <QualityRanger {...editorProps} value={value} />
       )
-    },
-    , {
+    }, {
       sort: true,
       dataField: 'name',
       text: 'Nome'
-    },];
+    }];
 
   const beforeSaveCell = (oldValue, newValue, row, column, done) => {
     const itemId = row.id
@@ -130,6 +130,7 @@ function App() {
   return (
     <div className="App">
       <div className='table_container'>
+        
         <ToolkitProvider
           keyField="id"
           data={products}
@@ -138,7 +139,9 @@ function App() {
 
         >
           {
-            props => (
+            props =>{ 
+              console.log(props)
+              return (
               <div>
                 <SearchBar {...props.searchProps} />
                 <ClearSearchButton {...props.searchProps} />
@@ -153,7 +156,7 @@ function App() {
                   pagination={paginationFactory()}
                 />
               </div>
-            )
+            )}
           }
         </ToolkitProvider>
 
