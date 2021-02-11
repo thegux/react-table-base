@@ -22,7 +22,20 @@ function App() {
     price: 225,
     active: false,
     images: 'beer-outline'
+  },
+  {
+    id: 2,
+    name: 'Bebidas',
+    price: 225,
+    active: false,
+    images: 'beer-outline'
   }]);
+
+  useEffect(() => {
+
+    window.addEventListener("keydown", testFun, true)
+
+  })
 
   const [selected, setSelected] = useState([])
 
@@ -37,15 +50,11 @@ function App() {
     setProducts(auxItems)
   }
 
-  useEffect(() => {
-      Array.from(document.getElementsByTagName('td')).map((i, key) => i.tabIndex = key)
-  }, [document.getElementsByTagName('td')])
-
   const columns = [
     {
       dataField: 'active',
       text: 'Status',
-  
+
       headerStyle: (colum, colIndex) => {
         return { width: '60px', textAlign: 'center' };
       },
@@ -58,7 +67,7 @@ function App() {
       headerStyle: (colum, colIndex) => {
         return { width: '70px', textAlign: 'center' };
       },
-      formatter: (editorProps, value, row, column, rowIndex, columnIndex) => (<ion-icon style={{fontSize: 50}} name={value.images}></ion-icon>),
+      formatter: (editorProps, value, row, column, rowIndex, columnIndex) => (<ion-icon style={{ fontSize: 50 }} name={value.images}></ion-icon>),
       editorRenderer: (editorProps, value, row, column, rowIndex, columnIndex) => (
         <QualityRanger {...editorProps} value={value} />
       )
@@ -67,6 +76,8 @@ function App() {
       dataField: 'name',
       text: 'Nome'
     }];
+
+
 
   const beforeSaveCell = (oldValue, newValue, row, column, done) => {
     const itemId = row.id
@@ -127,10 +138,34 @@ function App() {
     onSelectAll: handleOnSelectAll
   };
 
+  const testFun = (event) => {
+    
+    switch (event.code) {
+      case "Tab":
+      case "ArrowDown":
+        // Handle "back"
+        const allTds = Array.from(document.getElementsByTagName('td'))
+        allTds.map((i, key) => i.tabIndex = key)
+        const currentTabIndex = document.getElementsByClassName('react-bootstrap-table-editing-cell')[0].tabIndex
+        document.activeElement.blur()
+          setTimeout(() => {
+            const currentElement = allTds[currentTabIndex + 4]
+            if (currentElement) {
+              currentElement.click()
+            }
+
+          }, 100)
+    
+        
+
+        break;
+    }
+  }
+
   return (
     <div className="App">
       <div className='table_container'>
-        
+
         <ToolkitProvider
           keyField="id"
           data={products}
@@ -139,24 +174,25 @@ function App() {
 
         >
           {
-            props =>{ 
+            props => {
               console.log(props)
               return (
-              <div>
-                <SearchBar {...props.searchProps} />
-                <ClearSearchButton {...props.searchProps} />
-                <button onClick={() => changeMultiple()}> Mudar Nomes </button>
-                <hr />
-                <BootstrapTable
-                  {...props.baseProps}
-                  selectRow={selectRow}
-                  cellEdit={cellEditFactory({ mode: 'click', blurToSave: true, beforeSaveCell })}
-                  striped
-                  hover
-                  pagination={paginationFactory()}
-                />
-              </div>
-            )}
+                <div>
+                  <SearchBar {...props.searchProps} />
+                  <ClearSearchButton {...props.searchProps} />
+                  <button onClick={() => changeMultiple()}> Mudar Nomes </button>
+                  <hr />
+                  <BootstrapTable
+                    {...props.baseProps}
+                    selectRow={selectRow}
+                    cellEdit={cellEditFactory({ mode: 'click', blurToSave: true, beforeSaveCell })}
+                    striped
+                    hover
+                    pagination={paginationFactory()}
+                  />
+                </div>
+              )
+            }
           }
         </ToolkitProvider>
 
@@ -191,3 +227,4 @@ class QualityRanger extends React.Component {
     )
   }
 }
+
