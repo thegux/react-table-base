@@ -34,7 +34,7 @@ function App() {
   useEffect(() => {
 
     window.addEventListener("keydown", testFun, true)
-
+    return  () => window.removeEventListener('keydown', testFun)
   })
 
   const [selected, setSelected] = useState([])
@@ -75,6 +75,11 @@ function App() {
       sort: true,
       dataField: 'name',
       text: 'Nome'
+    },
+    {
+      sort: true,
+      dataField: 'price',
+      text: 'Preço'
     }];
 
 
@@ -139,7 +144,7 @@ function App() {
   };
 
   const testFun = (event) => {
-    
+
     switch (event.code) {
       case "Tab":
       case "ArrowDown":
@@ -148,15 +153,24 @@ function App() {
         allTds.map((i, key) => i.tabIndex = key)
         const currentTabIndex = document.getElementsByClassName('react-bootstrap-table-editing-cell')[0].tabIndex
         document.activeElement.blur()
-          setTimeout(() => {
-            const currentElement = allTds[currentTabIndex + 4]
-            if (currentElement) {
-              currentElement.click()
-            }
+        const parentElement = allTds[currentTabIndex].parentElement
+        const allElementsInsideParent = Array.from(parentElement.children)
+        let count = 0
+        for (let element in allElementsInsideParent) {
+          count += 1
+          if (allElementsInsideParent[element] === allTds[currentTabIndex]) {
+            break;
+          }
+        }
+        setTimeout(() => {
+          const currentElement = allTds[currentTabIndex + count]
+          if (currentElement) {
+            currentElement.click()
+          }
 
-          }, 100)
-    
-        
+        }, 100)
+
+
 
         break;
     }
