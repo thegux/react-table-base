@@ -144,51 +144,50 @@ function App() {
   };
 
   const testFun = (event) => {
+    const allTds = Array.from(document.getElementsByTagName('td'))
+    allTds.map((i, key) => i.tabIndex = key)
 
-    switch (event.code) {
-      case "Tab":
-      case "ArrowDown":
-        // Handle "back"
-        const allTds = Array.from(document.getElementsByTagName('td'))
-        const allTrs = Array.from(document.getElementsByTagName('tr'))
-        allTds.map((i, key) => i.tabIndex = key)
-
-        const currentTab = document.getElementsByClassName('react-bootstrap-table-editing-cell')[0]
-        if (currentTab) {
-          const currentTabIndex = currentTab.tabIndex
-          document.activeElement.blur()
-          const parentElement = allTds[currentTabIndex].parentElement
-          const allElementsInsideParent = Array.from(parentElement.children)
-
-          let count = 0
-          let rowIndex = 0
-
-          for (let element in allTrs) {
-            if (allTrs[element] === parentElement) {
-              rowIndex = element;
-            }
-          }
-          
-          for (let element in allElementsInsideParent) {
-            count += 1
-            if (allElementsInsideParent[element] === allTds[currentTabIndex]) {
-              break;
-            }
-          }
-     
+    const currentTab = document.getElementsByClassName('react-bootstrap-table-editing-cell')[0]
+    if (currentTab) {
+      const currentTabIndex = currentTab.tabIndex
+      document.activeElement.blur()
+ 
+      switch (event.code) {
+        case "ArrowUp":
           setTimeout(() => {
-            const currentElement = allTds[count + (parseInt(rowIndex) * (columns.length + 1) - 1)]
+            const currentElement = allTds[currentTabIndex - (columns.length + 1)]
             if (currentElement) {
               currentElement.click()
             }
 
-          }, 100)
+          }, 50)
+          break;
+        case "ArrowDown":
+          setTimeout(() => {
+            const currentElement = allTds[currentTabIndex + (columns.length + 1)]
+            if (currentElement) {
+              currentElement.click()
+            }
 
-        }
-
-
-
-        break;
+          }, 50)
+          break;
+        case "ArrowRight":
+          setTimeout(() => {
+            const currentElement = allTds[currentTabIndex + 1]
+            if(currentElement){
+              currentElement.click()
+            }
+          }, 50)
+        break
+        case "ArrowLeft":
+            setTimeout(() => {
+              const currentElement = allTds[currentTabIndex - 1]
+              if(currentElement){
+                currentElement.click()
+              }
+            }, 50)
+        break
+      }
     }
   }
 
