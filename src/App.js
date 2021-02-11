@@ -34,7 +34,7 @@ function App() {
   useEffect(() => {
 
     window.addEventListener("keydown", testFun, true)
-    return  () => window.removeEventListener('keydown', testFun)
+    return () => window.removeEventListener('keydown', testFun)
   })
 
   const [selected, setSelected] = useState([])
@@ -150,25 +150,41 @@ function App() {
       case "ArrowDown":
         // Handle "back"
         const allTds = Array.from(document.getElementsByTagName('td'))
+        const allTrs = Array.from(document.getElementsByTagName('tr'))
         allTds.map((i, key) => i.tabIndex = key)
-        const currentTabIndex = document.getElementsByClassName('react-bootstrap-table-editing-cell')[0].tabIndex
-        document.activeElement.blur()
-        const parentElement = allTds[currentTabIndex].parentElement
-        const allElementsInsideParent = Array.from(parentElement.children)
-        let count = 0
-        for (let element in allElementsInsideParent) {
-          count += 1
-          if (allElementsInsideParent[element] === allTds[currentTabIndex]) {
-            break;
-          }
-        }
-        setTimeout(() => {
-          const currentElement = allTds[currentTabIndex + count]
-          if (currentElement) {
-            currentElement.click()
-          }
 
-        }, 100)
+        const currentTab = document.getElementsByClassName('react-bootstrap-table-editing-cell')[0]
+        if (currentTab) {
+          const currentTabIndex = currentTab.tabIndex
+          document.activeElement.blur()
+          const parentElement = allTds[currentTabIndex].parentElement
+          const allElementsInsideParent = Array.from(parentElement.children)
+
+          let count = 0
+          let rowIndex = 0
+
+          for (let element in allTrs) {
+            if (allTrs[element] === parentElement) {
+              rowIndex = element;
+            }
+          }
+          
+          for (let element in allElementsInsideParent) {
+            count += 1
+            if (allElementsInsideParent[element] === allTds[currentTabIndex]) {
+              break;
+            }
+          }
+     
+          setTimeout(() => {
+            const currentElement = allTds[count + (parseInt(rowIndex) * (columns.length + 1) - 1)]
+            if (currentElement) {
+              currentElement.click()
+            }
+
+          }, 100)
+
+        }
 
 
 
